@@ -1,0 +1,30 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      routes:
+        - id: article-server
+          uri: lb://article-server
+          predicates:
+            - Path=/api/article/**
+          filters:
+            - RewritePath=/api/article/(?<segment>.*),/$\{segment}
+        - id: school-server
+          uri: lb://school-server
+          predicates:
+            - Path=/api/school/**
+          filters:
+            - RewritePath=/api/school/(?<segment>.*),/$\{segment}
+        - id: uaa-server
+          uri: lb://uaa-server
+          predicates:
+            - Path=/api/uaa/**
+          filters:
+            - RewritePath=/api/uaa/(?<segment>.*),/$\{segment}

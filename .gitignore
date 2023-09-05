@@ -1,0 +1,5 @@
+# Project exclude paths
+/api-commons/target/
+/article/target/
+/gateway/target/
+/ueragenment/target/
