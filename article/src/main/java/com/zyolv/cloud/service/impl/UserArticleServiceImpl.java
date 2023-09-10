@@ -1,6 +1,7 @@
 package com.zyolv.cloud.service.impl;
 
 import com.zyolv.cloud.Mapper.UserArticleMapper;
+import com.zyolv.cloud.entity.UserArticle;
 import com.zyolv.cloud.service.UserArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,5 +16,10 @@ public class UserArticleServiceImpl implements UserArticleService {
     @Override
     public List<Integer> getArticleIds(Integer userId) {
         return  userArticleMapper.selectArticleIds(userId);
+    }
+
+    @Override
+    public void addUserArticle(UserArticle userArticle) {
+        userArticleMapper.insert(userArticle);
     }
 }
