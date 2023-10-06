@@ -40,24 +40,28 @@ public class ArticleController {
      */
     @GetMapping("/getArticle")
     @PreAuthorize("hasAuthority('admin')")
-    public CommonResult getArticle(Integer userId) {
+    public CommonResult getArticle(@RequestParam("userId") String userId, @RequestParam("page") Integer page, @RequestParam("limit") Integer size) {
 
 
         List<Article> res = new ArrayList<>();
-        //获取身份验证
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserEntity user = UserUtil.getUser(authentication);
-        if (user == null) {
-            return CommonResult.fail(401, "用户信息不存在", null);
+//        //获取身份验证
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        UserEntity user = UserUtil.getUser(authentication);
+//        if (user == null) {
+//            return CommonResult.fail(401, "用户信息不存在", null);
+//        }
+//        if (userId == null || userId.equals(user.getId())) {
+//            res = articleService.getArticles(user.getId());
+//        } else {
+//            res = articleService.getPubArticles(userId);
+//        }
+        Integer i = null;
+        if (!userId.equals("")){
+             i = Integer.valueOf(userId);
         }
-        if (userId == null || userId.equals(user.getId())) {
-            res = articleService.getArticles(user.getId());
-        } else {
-            res = articleService.getPubArticles(userId);
-        }
 
-        return CommonResult.success(res);
+        return CommonResult.success(articleService.getAll(i,page,size));
     }
 
     @PostMapping("/addAritcle")

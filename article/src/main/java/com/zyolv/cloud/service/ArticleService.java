@@ -1,5 +1,6 @@
 package com.zyolv.cloud.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zyolv.cloud.entities.UserEntity;
 import com.zyolv.cloud.entity.Article;
 
@@ -14,4 +15,5 @@ public interface ArticleService {
     void addArticle(Article article);
     void addCollArticle(Integer userId,String uid);
     List<UserEntity> getCollUsers(String uid);
+    Page<Article> getAll(Integer userId, Integer page, Integer size);
 }

@@ -1,6 +1,8 @@
 package com.zyolv.cloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zyolv.cloud.Mapper.ArticleMapper;
 import com.zyolv.cloud.Mapper.CollArticleMapper;
 
@@ -66,6 +68,17 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<UserEntity> getCollUsers(String uid) {
         return collArticleMapper.selectCollArticleUsers(uid);
+    }
+
+    @Override
+    public Page<Article> getAll(Integer userId, Integer page, Integer size) {
+        QueryWrapper<Article> wrapper = new QueryWrapper<>();
+        wrapper.eq("is_del",0);
+        if (null != userId){
+            wrapper.inSql("id","select article_id from t_user_article where user_id = "+userId);
+        }
+        Page<Article> pageO = new Page<>(page,size);
+        return articleMapper.selectPage(pageO,wrapper);
     }
 
 }
