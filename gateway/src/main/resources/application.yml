@@ -16,12 +16,12 @@ spring:
             - Path=/api/article/**
           filters:
             - RewritePath=/api/article/(?<segment>.*),/$\{segment}
-        - id: school-server
-          uri: lb://school-server
+        - id: role-server
+          uri: lb://role-server
           predicates:
-            - Path=/api/school/**
+            - Path=/api/role/**
           filters:
-            - RewritePath=/api/school/(?<segment>.*),/$\{segment}
+            - RewritePath=/api/role/(?<segment>.*),/$\{segment}
         - id: uaa-server
           uri: lb://uaa-server
           predicates:

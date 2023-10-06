@@ -1,4 +1,4 @@
-package com.zyolv.cloud.entities;
+package com.zyolv.cloud.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,33 +10,26 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-/**
- * @Description:
- * @Author: zhurongsheng
- * @Date: 2020/7/10 01:14
- */
-@TableName("t_user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
+@TableName("t_role")
+public class RoleEntity {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private String username;
+    private Integer status;
 
-    private String password;
-
-    private String name;
+    @TableField(value = "role_name")
+    private String roleName;
 
     @TableField(value = "create_time")
     private Date createTime;
     @TableField(value = "update_time")
     private Date updateTime;
 
-    private String phone;
+    private String remark;
 
-    private String rolename;
 
 }

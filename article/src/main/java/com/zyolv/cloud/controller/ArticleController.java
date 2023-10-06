@@ -39,7 +39,7 @@ public class ArticleController {
      * 老师权限
      */
     @GetMapping("/getArticle")
-    @PreAuthorize("hasAuthority('teacher')")
+    @PreAuthorize("hasAuthority('admin')")
     public CommonResult getArticle(Integer userId) {
 
 
@@ -62,7 +62,7 @@ public class ArticleController {
 
     @PostMapping("/addAritcle")
     @ResponseBody
-    @PreAuthorize("hasAuthority('teacher')")
+    @PreAuthorize("hasAuthority('admin')")
     public CommonResult addAritcle(@RequestBody Article article) {
 
         //获取身份验证
@@ -90,7 +90,7 @@ public class ArticleController {
     }
     @PostMapping("/addCollAritcle")
     @ResponseBody
-    @PreAuthorize("hasAuthority('teacher')")
+    @PreAuthorize("hasAuthority('admin')")
     public CommonResult addCollAritcle(@RequestBody Article article) {
 
         //获取身份验证
@@ -109,7 +109,7 @@ public class ArticleController {
     }
     @GetMapping("/getCollAritcle")
     @ResponseBody
-    @PreAuthorize("hasAuthority('teacher')")
+    @PreAuthorize("hasAuthority('admin')")
     public CommonResult getCollAritcle( String uid) {
 
         //获取身份验证

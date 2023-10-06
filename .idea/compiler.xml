@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-commons" />
         <module name="ueragenment" />
+        <module name="role" />
         <module name="gateway" />
         <module name="article" />
       </profile>
