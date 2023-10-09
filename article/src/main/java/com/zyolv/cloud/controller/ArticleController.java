@@ -1,5 +1,6 @@
 package com.zyolv.cloud.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zyolv.cloud.entities.CommonResult;
 import com.zyolv.cloud.entities.UserEntity;
 import com.zyolv.cloud.entity.Article;
@@ -43,11 +44,12 @@ public class ArticleController {
     public CommonResult getArticle(@RequestParam("userId") String userId, @RequestParam("page") Integer page, @RequestParam("limit") Integer size) {
 
 
-        List<Article> res = new ArrayList<>();
-//        //获取身份验证
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        UserEntity user = UserUtil.getUser(authentication);
+
+        //获取身份验证
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserEntity user = UserUtil.getUser(authentication);
+
 //        if (user == null) {
 //            return CommonResult.fail(401, "用户信息不存在", null);
 //        }
@@ -61,7 +63,21 @@ public class ArticleController {
              i = Integer.valueOf(userId);
         }
 
-        return CommonResult.success(articleService.getAll(i,page,size));
+        Map<String,Object> res = new HashMap<>();
+        Page<Article> all = articleService.getAll(i, page, size);
+        List<Article> records = all.getRecords();
+        for (Article article:records){
+            List<UserEntity> collUsers = articleService.getCollUsers(article.getUid());
+            List<Integer> list = new ArrayList<>();
+            for (UserEntity userEntity:collUsers){
+                 list.add(userEntity.getId());
+            }
+            article.setCollectionUsers(list);
+        }
+        all.setRecords(records);
+        res.put("record",all);
+        res.put("userId",user.getId());
+        return CommonResult.success(res);
     }
 
     @PostMapping("/addAritcle")
@@ -81,7 +97,7 @@ public class ArticleController {
         if (null==article.getIsPublic()){
             article.setIsPublic(1);
         }
-
+        article.setCollectionCount(0);
         articleService.addArticle(article);
 
 
@@ -92,6 +108,33 @@ public class ArticleController {
 
         return CommonResult.success(articleService.getArticleByUid(user.getId()+article.getArticleName()));
     }
+    @PutMapping("/updateAritcle")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('admin')")
+    public CommonResult updateAritcle(@RequestBody Article article) {
+
+        //获取身份验证
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = UserUtil.getUser(authentication);
+
+        String uid = article.getUid();
+        String newUid = user.getId()+article.getArticleName();
+        if (!uid.equals(newUid)){
+            if (articleService.getArticleByUid(newUid) != null){
+                return CommonResult.fail(400,"article已存在",articleService.getArticleByUid(user.getId()+article.getArticleName()));
+            }
+        }
+        String articleName = article.getArticleName();
+        String content = article.getContent();
+
+        articleService.updateArticle(uid,articleName,content,newUid);
+
+
+
+        return CommonResult.success("success");
+    }
+
+
     @PostMapping("/addCollAritcle")
     @ResponseBody
     @PreAuthorize("hasAuthority('admin')")
@@ -111,6 +154,26 @@ public class ArticleController {
         redisTemplate.opsForValue().set(article.getUid(),collArticle);
         return CommonResult.success(collArticle);
     }
+    @PostMapping("/delCollAritcle")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('admin')")
+    public CommonResult delCollAritcle(@RequestBody Article article) {
+
+        //获取身份验证
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = UserUtil.getUser(authentication);
+        if (redisTemplate.hasKey(article.getUid())){
+            redisTemplate.delete(article.getUid());
+        }
+        articleService.delCollArticle(user.getId(),article.getUid());
+        Map<String,Object> collArticle  = new HashMap<>();
+        collArticle.put("collectionCount",articleService.getArticleByUid(article.getUid()).getCollectionCount());
+        collArticle.put("collectionUser", articleService.getCollUsers(article.getUid()));
+        redisTemplate.delete(article.getUid());
+        redisTemplate.opsForValue().set(article.getUid(),collArticle);
+        return CommonResult.success(collArticle);
+    }
+
     @GetMapping("/getCollAritcle")
     @ResponseBody
     @PreAuthorize("hasAuthority('admin')")

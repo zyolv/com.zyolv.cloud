@@ -21,4 +21,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
     Article selectArticleByUid(@Param("uid") String uid);
     @Update("update t_article set collection_count=collection_count+1 WHERE uid=#{uid} ")
     void addCollArticle(@Param("uid") String uid);
+    @Update("update t_article set collection_count=collection_count-1 WHERE uid=#{uid} ")
+    void delCollArticle(@Param("uid") String uid);
+    @Update("update t_article set article_name=#{articleName},content=#{content},uid=#{newUid} WHERE uid=#{uid} ")
+    void updateArticle(@Param("uid") String uid,@Param("articleName") String articleName,@Param("content") String content,@Param("newUid") String newUid);
 }

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +27,7 @@ public class Article {
     private Integer isPublic;//公开标志，0：不公开；1：公开
     @TableField(value = "collection_count")
     private Integer collectionCount;
+    @TableField(exist = false)
+    private List<Integer> collectionUsers;
 
 }
