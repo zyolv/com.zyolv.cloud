@@ -18,5 +18,5 @@ public class CollArticle {
     @TableField("user_id")
     private Integer userId;
     @TableField("coll_id")
-    private String collId;
+    private Integer collId;
 }

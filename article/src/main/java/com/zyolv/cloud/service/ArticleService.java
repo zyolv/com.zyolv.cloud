@@ -9,14 +9,15 @@ import java.util.List;
 
 public interface ArticleService {
     Article getArticleById(Integer articleId);
-    Article getArticleByUid(String uid);
+    List<Article> getArticleByUid(Integer uid);
     List<Article> getArticles(Integer userId);
     List<Article> getPubArticles(Integer userId);
     Integer getArticleId(Article article);
     void addArticle(Article article);
-    void addCollArticle(Integer userId,String uid);
-    void delCollArticle(Integer userId,String uid);
-    List<UserEntity> getCollUsers(String uid);
-    Page<Article> getAll(Integer userId, Integer page, Integer size);
-    void updateArticle(String uid, String articleName, String content, String newUid);
+    void addCollArticle(Integer userId,Integer uid);
+    void delCollArticle(Integer userId,Integer uid);
+    List<UserEntity> getCollUsers(Integer id);
+    Page<Article> getAll(String articleName, Integer page, Integer size);
+    void updateArticle(Integer id, String articleName, String content);
+    List<Integer> getArticleIds(Integer userId);
 }

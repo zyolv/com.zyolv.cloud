@@ -32,7 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Article getArticleByUid(String uid) {
+    public List<Article> getArticleByUid(Integer uid) {
         return articleMapper.selectArticleByUid(uid);
     }
 
@@ -57,27 +57,27 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void addCollArticle(Integer userId, String uid) {
+    public void addCollArticle(Integer userId, Integer id) {
         CollArticle article = new CollArticle();
-        article.setCollId(uid);
+        article.setCollId(id);
         article.setUserId(userId);
-        articleMapper.addCollArticle(uid);
+        articleMapper.addCollArticle(id);
         collArticleMapper.insert(article);
     }
 
     @Override
-    public void delCollArticle(Integer userId, String uid) {
+    public void delCollArticle(Integer userId, Integer uid) {
         collArticleMapper.delCollArticle(uid,userId);
         articleMapper.delCollArticle(uid);
     }
 
     @Override
-    public List<UserEntity> getCollUsers(String uid) {
-        return collArticleMapper.selectCollArticleUsers(uid);
+    public List<UserEntity> getCollUsers(Integer id) {
+        return collArticleMapper.selectCollArticleUsers(id);
     }
 
     @Override
-    public Page<Article> getAll(Integer userId, Integer page, Integer size) {
+    public Page<Article> getAll(String articleName, Integer page, Integer size) {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
 //        wrapper.select("a.id","a.article_name","a.content","a.uid","a.collection_count","b.user_id as collectionUsers")
 //                .from("t_article a")
@@ -85,16 +85,21 @@ public class ArticleServiceImpl implements ArticleService {
 //                .eq("a.is_del",0)
 //                .
         wrapper.eq("is_del",0);
-        if (null != userId){
-            wrapper.inSql("id","select article_id from t_user_article where user_id = "+userId);
+        if (null != articleName){
+            wrapper.like("article_name",articleName);
         }
         Page<Article> pageO = new Page<>(page,size);
         return articleMapper.selectPage(pageO,wrapper);
     }
 
     @Override
-    public void updateArticle(String uid, String articleName, String content, String newUid) {
-        articleMapper.updateArticle(uid,articleName,content,newUid);
+    public void updateArticle(Integer id, String articleName, String content) {
+        articleMapper.updateArticle(id,articleName,content);
+    }
+
+    @Override
+    public List<Integer> getArticleIds(Integer userId) {
+        return  articleMapper.selectArticleIds(userId);
     }
 
 }

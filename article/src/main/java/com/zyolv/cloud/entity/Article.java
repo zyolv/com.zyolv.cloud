@@ -20,7 +20,7 @@ public class Article {
     @TableField(value = "article_name")
     private String articleName;
     private String content;
-    private String uid;//userId+articleName保证唯一
+    private Integer uid;//userId
     @TableField(value = "is_del")
     private Integer isDel;//删除标志，0：未删除；1：已删除
     @TableField(value = "is_public")
